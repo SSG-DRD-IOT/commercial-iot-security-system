@@ -55,29 +55,29 @@ while(True):
     kernel = np.ones((20,20), np.uint8)
     blobby = cv2.dilate(thresh, kernel, iterations= 4)
 
-    im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+    fra, contours, hierarchy = cv2.findContours(blobby, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    # print np.shape(blobby)
     area = 0
-    largest_contour = 0
+    largest_contour = -1
     for i in xrange(len(contours)):
         if cv2.contourArea(contours[i])>area:
             largest_contour = i
-
-    cv2.drawContours(frame, contours, largest_contour, [150, 0, 0],  3)
+    #
+    # cv2.drawContours(blobby, contours, 0, 150,  3)
+    frameMod = np.copy(frame)
+    cv2.drawContours(frameMod, contours, largest_contour, [0, 0, 255],  3)
 
     # buffer
     pastBuff = currBuff
     currBuff = ( (currBuff << 1) | (np.any(blobby)) ) & buffMask
     if currBuff == buffMask:
-        cv2.imshow('frame', frame)
+        cv2.imshow('frame', frameMod)
     else:
-        cv2.imshow('frame', blankFrame)
+        cv2.imshow('frame', frame)
     # print np.any(blobby)
     if cv2.waitKey(1) & 0xFF == 27:
         break
     elif cv2.waitKey(1) & 0xFF == ord('r'):
         cap = OnlineVideo(url)
         print('retarting')
-
-cap.release()
-cv2.destroyAllWindows()
+exit()
