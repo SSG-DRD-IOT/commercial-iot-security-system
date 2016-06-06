@@ -18,3 +18,13 @@ Download OpenCV 3.1 for Windows [here](https://sourceforge.net/projects/opencvli
 Extract the folder **opencv** and go to **opencv**>**build**>**python**>**2.7**>**x64**
 and place the file **cv2.pyd** into your
 **C:\Users\username\AppData\Local\Continuum\Anaconda2\Lib\site-packages** folder.
+
+### Tutorial Flow
+*GUI -> Core -> imageProcessing -> featureDetection*
+
+### Experiments
+*projects I took on to better learn openCV*
+- I still need to finish commenting
+- *experiments_pretty* will be the updated, commented, prettified version of experiments
+- current **experiments** will become **experiments_ugly**
+- props to [Python Beautify](http://www.cleancss.com/python-beautify/)
