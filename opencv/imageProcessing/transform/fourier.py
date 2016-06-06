@@ -103,11 +103,11 @@ dft_shift = np.fft.fftshift(dft)
 
 magnitude_spectrum = 20 * np.log(cv2.magnitude(dft_shift[:,:,0], dft_shift[:,:,1]))
 
-plt.ubplot(121), plt.imshow(img, cmap = 'gray')
+plt.subplot(121), plt.imshow(img, cmap = 'gray')
 plt.title('Input Image'), plt.xticks([]), plt.yticks([])
 plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
 plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
-plt.show()
+plt.show()  
 # NOTE: use cv2.cartToPolar(), which returns both magnitude and phase
 
 # now, we do inverse DFT
