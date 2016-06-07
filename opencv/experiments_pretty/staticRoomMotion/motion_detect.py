@@ -12,7 +12,7 @@ def setEmpty(event, x, y, flags, param):
         print('double')
     emptyFrame32 = np.float32(emptyFrame)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 _, frame = cap.read()
 emptyFrame = np.zeros(np.shape(frame), np.uint8)
 emptyFrame32 = np.float32(emptyFrame)
@@ -34,7 +34,7 @@ while(True):
     blobby = cv2.dilate(thresh, kernel, iterations= 4)
 
     cv2.imshow('frame', blobby)
-    
+
     if cv2.waitKey(1) & 0xFF == 27:
         break
 

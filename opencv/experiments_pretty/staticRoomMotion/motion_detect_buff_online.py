@@ -34,7 +34,7 @@ else:
 
 cap = OnlineVideo(url)
 frame = cap.getFrame()
-# print np.shape(frame)
+
 blankFrame = np.zeros(np.shape(frame), np.uint8)
 emptyFrame = blankFrame
 emptyFrame32 = np.float32(blankFrame)
@@ -62,7 +62,7 @@ while(True):
         cv2.imshow('frame', blobby)
     else:
         cv2.imshow('frame', blankFrame)
-    # print np.any(blobby)
+
     if cv2.waitKey(1) & 0xFF == 27:
         break
     elif cv2.waitKey(1) & 0xFF == ord('r'):

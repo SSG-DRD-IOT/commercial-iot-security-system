@@ -21,11 +21,6 @@ BUFF_LEN = 10
 buffMask = genBuffMask(BUFF_LEN)
 currBuff = 0
 
-# if len(argv) > 1:
-#     videoLocation = argv[1]
-#     print argv[1]
-# else:
-#     videoLocation = 0
 videoLocation = 0
 
 
@@ -37,7 +32,7 @@ ret, frame = cap.read()
 print 'ret is ', ret
 while ret == False:
     print ''
-# print np.shape(frame)
+
 blankFrame = np.zeros(np.shape(frame), np.uint8)
 emptyFrame = blankFrame
 emptyFrame32 = np.float32(blankFrame)
@@ -65,7 +60,7 @@ while(True):
         cv2.imshow('frame', blobby)
     else:
         cv2.imshow('frame', blankFrame)
-    # print np.any(blobby)
+
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
