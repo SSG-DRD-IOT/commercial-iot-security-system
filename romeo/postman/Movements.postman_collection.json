@@ -1,0 +1,45 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Movements",
+		"_postman_id": "03e02361-8526-1851-5688-a972760b4419",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "forwards",
+			"request": {
+				"url": "http://{{ipaddress}}:{{port}}/actions/forward",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"speed\":150\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "stop",
+			"request": {
+				"url": "http://{{ipaddress}}:{{port}}/actions/stop",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

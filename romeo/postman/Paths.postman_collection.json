@@ -1,0 +1,127 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Paths",
+		"_postman_id": "58384967-0313-1d4e-4adb-1d0d4ce7afde",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Path",
+			"request": {
+				"url": "http://{{ipaddress}}:{{port}}/paths/administer",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"test1\": [\r\n        {\r\n            \"type\": \"start\"\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 253,\r\n            \"duration\": 2\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 253,\r\n            \"duration\": 1\r\n        },\r\n        {\r\n            \"type\": \"stop\"\r\n        }\r\n    ]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Execute Path",
+			"request": {
+				"url": "http://{{ipaddress}}:{{port}}/paths/execute/test1",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Show Available Paths",
+			"request": {
+				"url": "http://{{ipaddress}}:5000/paths/administer",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "CR_Path1",
+			"request": {
+				"url": "http://{{ipaddress}}:5000/paths/administer",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"path1\": [\r\n        {\r\n            \"type\": \"start\"\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n         {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.2\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.3\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 150,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"stop\"\r\n        }\r\n    ]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Execute path1",
+			"request": {
+				"url": "http://{{ipaddress}}:5000/paths/execute/path1",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Path copy",
+			"request": {
+				"url": "http://{{ipaddress}}:5000/paths/administer",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"test1\": [\r\n        {\r\n            \"type\": \"start\"\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 253,\r\n            \"duration\": 2\r\n        },\r\n        {\r\n            \"type\": \"pointTurn\",\r\n            \"speed\": 40,\r\n            \"duration\": 0.5\r\n        },\r\n        {\r\n            \"type\": \"forward\",\r\n            \"speed\": 253,\r\n            \"duration\": 1\r\n        },\r\n        {\r\n            \"type\": \"stop\"\r\n        }\r\n    ]\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Execute Path copy",
+			"request": {
+				"url": "http://{{ipaddress}}:5000/paths/execute/test1",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
