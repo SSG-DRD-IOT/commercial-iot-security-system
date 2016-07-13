@@ -1,5 +1,6 @@
 import cv2
 import sys
+import trigger
 
 def genBuffMask(bufferFrames):
     'create bitwise mask for buffer length'
@@ -12,11 +13,11 @@ BUFF_LEN = 30 # 30 seems to be optimal number of frames for buffer
 
 buffMask = genBuffMask(BUFF_LEN)
 
-print sys.argv, len(sys.argv)
 if len(sys.argv) > 1:
     cascPath = sys.argv[1]
 else:
     cascPath = 'haar_face.xml'
+
 faceCascade = cv2.CascadeClassifier(cascPath)
 
 # input which camera to use
@@ -29,11 +30,14 @@ if len(sys.argv)==3:
         camera = 0
 else:
     camera = 0
+
 cap = cv2.VideoCapture(0)
 
 # create the VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
-out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+
+i = 0
+out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
 
 currBuff = 0;
 
@@ -61,8 +65,12 @@ while True:
 
     if(currBuff > 0):
         out.write(frame)
+    if(currBuff == 1):
+        trigger.trigger(len(faces))
     elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
-        break
+        out.release()
+        i = i + 1
+        out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
