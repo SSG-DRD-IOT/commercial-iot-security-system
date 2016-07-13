@@ -12,7 +12,8 @@ Set up and update your Edison.
 The robot scripts are written in Python **2.7**, so be sure that this is the version you're running.
 In order to run the Flask server, we need to install the necessary packages.
 This can be done by running
-  **pip install flask flask-restful**
+
+**pip install flask flask-restful**
 
 #### Wiring
 Connect a 7.4v battery, motors with hall encoders, and button to the Romeo board as
@@ -22,7 +23,8 @@ shown in the diagram:
 
 ## Controlling Pluto
 Run the flask server using
-  **python main.js**
+
+**python main.py**
 
 Pluto is controlled through a RESTful API. Example requests can be found in the *postman*
 commands, which can be imported into Postman.
@@ -51,7 +53,7 @@ to the route corresponding to the command.
 
 ### Path Controls
 Paths are sets of commands for the robot to take. They can be created, modified,
-deleted, and executed.\
+deleted, and executed.
 #### Managing Paths
 ##### GET
 Retrieve the path. If no argument supplied, returns all available paths
