@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
-from sys import argv
-import urllib
+import utils
 
 def setEmpty(event, x, y, flags, param):
     global emptyFrame, emptyFrame32
@@ -11,27 +10,23 @@ def setEmpty(event, x, y, flags, param):
         emptyFrame = np.zeros(np.shape(frame), np.uint8)
     emptyFrame32 = np.float32(emptyFrame)
 
-def genBuffMask(bufferFrames):
-    'create bitwise mask for buffer length'
-    buffMask = 1
-    for i in range(0, BUFF_LEN-1):
-        buffMask = (buffMask)<<1 | buffMask
-    return buffMask
-BUFF_LEN = 10
-buffMask = genBuffMask(BUFF_LEN)
+
+BUFF_LEN = 5
+buffMask = utils.genBuffMask(BUFF_LEN)
 currBuff = 0
 
-videoLocation = 0
+if len(utils.argv) > 1:
+    dest = utils.argv[1]
+else:
+    dest = '0'
+
+if len(dest) > 4:
+    cap = utils.OnlineVideo(dest)
+else:
+    cap = cv2.VideoCapture(int(dest))
 
 
-cap = cv2.VideoCapture(videoLocation)
-while cap.isOpened == False:
-    print ' '
-print 'cap.isOpened is ', cap.isOpened
-ret, frame = cap.read()
-print 'ret is ', ret
-while ret == False:
-    print ''
+_, frame = cap.read()
 
 blankFrame = np.zeros(np.shape(frame), np.uint8)
 emptyFrame = blankFrame
@@ -53,16 +48,30 @@ while(True):
     kernel = np.ones((20,20), np.uint8)
     blobby = cv2.dilate(thresh, kernel, iterations= 4)
 
+    fra, contours, hierarchy = cv2.findContours(blobby, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+    area = 0
+    largest_contour = -1
+    for i in xrange(len(contours)):
+        if cv2.contourArea(contours[i])>area:
+            largest_contour = i
+
+    frameMod = np.copy(frame)
+    cv2.drawContours(frameMod, contours, largest_contour, [0, 0, 255],  3)
+
     # buffer
     pastBuff = currBuff
     currBuff = ( (currBuff << 1) | (np.any(blobby)) ) & buffMask
     if currBuff == buffMask:
-        cv2.imshow('frame', blobby)
+        cv2.imshow('frame', frameMod)
     else:
-        cv2.imshow('frame', blankFrame)
+        cv2.imshow('frame', frame)
 
     if cv2.waitKey(1) & 0xFF == 27:
         break
-
+    # elif cv2.waitKey(1) & 0xFF == ord('r'):
+    #     cap.release()
+    #     cap = OnlineVideo(url)
+    #     print('retarting')
 cap.release()
 cv2.destroyAllWindows()
