@@ -11,7 +11,7 @@ cap = cv2.VideoCapture(utils.dest)
 # create the VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
 
-fname = utils.currDate() + "_" + utils.currTime()+".avi"
+fname = utils.currDate() + "_" + utils.currTime() + ".avi"
 out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
 
 currBuff = 0
@@ -40,11 +40,8 @@ while True:
     currBuff = ( (currBuff << 1) | (len(faces)>0) ) & buffMask
 
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 1)
 
-    if( (currBuff > 0) ):
-        out.write(frame)
-        frameCount += 1
     if(currBuff == 1):
         triggerInfo = {
             "event": "FaceDetect",
@@ -54,10 +51,13 @@ while True:
             "offsetframe": frameCount
         }
         utils.trigger(triggerInfo)
-    # elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
-    #     out.release()
-    #     i = i + 1
-    #     out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
+        lastStart = frameCount
+
+    if( (currBuff > 0) ):
+        if (frameCount - lastStart) < utils.recordLength:
+            out.write(frame)
+        frameCount += 1
+
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
