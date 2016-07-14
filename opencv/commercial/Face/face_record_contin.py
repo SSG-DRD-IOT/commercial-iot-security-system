@@ -1,6 +1,5 @@
 import cv2
-import sys
-import trigger
+import utils
 
 def genBuffMask(bufferFrames):
     'create bitwise mask for buffer length'
@@ -11,20 +10,20 @@ def genBuffMask(bufferFrames):
 
 BUFF_LEN = 30 # 30 seems to be optimal number of frames for buffer
 
-buffMask = genBuffMask(BUFF_LEN)
+buffMask = utils.genBuffMask(BUFF_LEN)
 
-if len(sys.argv) > 1:
-    cascPath = sys.argv[1]
+if len(utils.argv) > 1:
+    cascPath = utils.argv[1]
 else:
     cascPath = 'haar_face.xml'
 
 faceCascade = cv2.CascadeClassifier(cascPath)
 
 # input which camera to use
-if len(sys.argv)==3:
-    if sys.argv[2] == 0:
+if len(utils.argv)==3:
+    if utils.argv[2] == 0:
         camera = 0
-    elif sys.argv[2] == 1:
+    elif utils.argv[2] == 1:
         camera = 1
     else:
         camera = 0
@@ -66,7 +65,7 @@ while True:
     if(currBuff > 0):
         out.write(frame)
     if(currBuff == 1):
-        trigger.trigger(len(faces))
+        utils.trigger(len(faces))
     elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
         out.release()
         i = i + 1

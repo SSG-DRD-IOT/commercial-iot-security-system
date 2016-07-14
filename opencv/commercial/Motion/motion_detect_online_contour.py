@@ -33,7 +33,7 @@ else:
 
 
 cap = OnlineVideo(url)
-frame = cap.getFrame()
+_, frame = cap.read()
 
 blankFrame = np.zeros(np.shape(frame), np.uint8)
 emptyFrame = blankFrame
@@ -43,7 +43,7 @@ cv2.namedWindow('frame')
 cv2.setMouseCallback('frame', setEmpty)
 
 while(True):
-    frame = cap.getFrame()
+    _, frame = cap.read()
     frame32 = np.float32(frame)
 
     diff32 = np.absolute(frame32 - emptyFrame32)
@@ -77,8 +77,8 @@ while(True):
     if cv2.waitKey(1) & 0xFF == 27:
         break
     elif cv2.waitKey(1) & 0xFF == ord('r'):
-        cap.killStream()
+        cap.release()
         cap = OnlineVideo(url)
         print('retarting')
-cap.killStream()
+cap.release()
 exit()

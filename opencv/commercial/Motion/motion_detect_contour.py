@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import urllib
+import utils
 
 def setEmpty(event, x, y, flags, param):
     global emptyFrame, emptyFrame32
@@ -10,14 +11,8 @@ def setEmpty(event, x, y, flags, param):
         emptyFrame = np.zeros(np.shape(frame), np.uint8)
     emptyFrame32 = np.float32(emptyFrame)
 
-def genBuffMask(bufferFrames):
-    'create bitwise mask for buffer length'
-    buffMask = 1
-    for i in range(0, BUFF_LEN-1):
-        buffMask = (buffMask)<<1 | buffMask
-    return buffMask
 BUFF_LEN = 10
-buffMask = genBuffMask(BUFF_LEN)
+buffMask = utils.genBuffMask(BUFF_LEN)
 currBuff = 0
 
 videoLocation = 0

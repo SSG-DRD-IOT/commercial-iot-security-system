@@ -7,7 +7,7 @@ class OnlineVideo(object):
     USAGE:
     cap = OnlineVideo(url)
         ex. OnlineVideo('http://IP_ADDRESS:PORT/video.mjpg')
-    frame = cap.getFrame()
+    frame = cap.read()
 
     see: http://stackoverflow.com/questions/21702477/how-to-parse-mjpeg-http-stream-from-ip-camera
     """
@@ -16,7 +16,7 @@ class OnlineVideo(object):
         self.bytes = ''
         self.frame = np.zeros((480, 640, 3), np.uint8)
         print "url opened at: ", url
-    def getFrame(self):
+    def read(self):
         numBytes = 13840
         self.bytes += self.stream.read(numBytes)
         a = self.bytes.find('\xff\xd8')
@@ -25,6 +25,6 @@ class OnlineVideo(object):
             jpg = self.bytes[a:b+2]
             self.bytes = self.bytes[b+2:]
             self.frame = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-        return self.frame
-    def killStream(self):
+        return bool(self.frame), self.frame
+    def release(self):
         self.stream.close()
