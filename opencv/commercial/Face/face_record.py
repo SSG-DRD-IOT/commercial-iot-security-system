@@ -1,13 +1,6 @@
 import cv2
 import utils
 
-def genBuffMask(bufferFrames):
-    'create bitwise mask for buffer length'
-    buffMask = 1
-    for i in range(0, BUFF_LEN-1):
-        buffMask = (buffMask)<<1 | buffMask
-    return buffMask
-
 BUFF_LEN = 30 # 30 seems to be optimal number of frames for buffer
 
 buffMask = utils.genBuffMask(BUFF_LEN)
