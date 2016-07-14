@@ -11,19 +11,14 @@ def setEmpty(event, x, y, flags, param):
     emptyFrame32 = np.float32(emptyFrame)
 
 
-BUFF_LEN = 5
-buffMask = utils.genBuffMask(BUFF_LEN)
+buffMask = utils.genBuffMask(utils.BUFF_LEN)
+
 currBuff = 0
 
-if len(utils.argv) > 1:
-    dest = utils.argv[1]
+if type(utils.dest) is str:
+    cap = utils.OnlineVideo(utils.dest)
 else:
-    dest = '0'
-
-if len(dest) > 4:
-    cap = utils.OnlineVideo(dest)
-else:
-    cap = cv2.VideoCapture(int(dest))
+    cap = cv2.VideoCapture(utils.dest)
 
 
 _, frame = cap.read()
@@ -60,7 +55,6 @@ while(True):
     cv2.drawContours(frameMod, contours, largest_contour, [0, 0, 255],  3)
 
     # buffer
-    pastBuff = currBuff
     currBuff = ( (currBuff << 1) | (np.any(blobby)) ) & buffMask
     if currBuff == buffMask:
         cv2.imshow('frame', frameMod)
@@ -69,9 +63,5 @@ while(True):
 
     if cv2.waitKey(1) & 0xFF == 27:
         break
-    # elif cv2.waitKey(1) & 0xFF == ord('r'):
-    #     cap.release()
-    #     cap = OnlineVideo(url)
-    #     print('retarting')
 cap.release()
 cv2.destroyAllWindows()
