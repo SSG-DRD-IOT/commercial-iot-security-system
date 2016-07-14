@@ -28,17 +28,21 @@ cap = cv2.VideoCapture(0)
 # create the VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
 
-i = 0
-out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
+fname = "output"+".avi"
+out = cv2.VideoWriter(fname, fourcc, 20.0, (640, 480))
 
-currBuff = 0;
+currBuff = 0
+
+# the number of the frame in the video
+frameCount = 0
 
 while True:
-
     # Capture frame-by-frame
     ret, frame = cap.read()
 
+    # the cascade works in grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
     # begin face cascade
     faces = faceCascade.detectMultiScale(
         gray,
@@ -55,18 +59,25 @@ while True:
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-    if(currBuff > 0):
+    if( (currBuff > 0) ):
         out.write(frame)
+        frameCount += 1
     if(currBuff == 1):
-        utils.trigger(len(faces))
-    elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
-        out.release()
-        i = i + 1
-        out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
+        triggerInfo = {
+            "event": "FaceDetect",
+            "uri": "http://gateway" + "/" + fname,
+            "facenum": len(faces),
+            "timestamp": utils.currDate() + "--" + utils.currTime(),
+            "offsetframe": frameCount
+        }
+        utils.trigger(triggerInfo)
+    # elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
+    #     out.release()
+    #     i = i + 1
+    #     out = cv2.VideoWriter('output'+str(i)+'.avi', fourcc, 20.0, (640, 480))
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
-    # cv2.imshow('Video', gray)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
