@@ -32,5 +32,5 @@ def trigger(info):
     except:
         print "no MQTT connection found"
         pass
-    print "Event triggered:", info["facenum"], "detected at frame:", info["offsetframe"],"!"
+    print "Event triggered:", info["event"],"!"
     return 1
