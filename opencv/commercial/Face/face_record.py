@@ -28,7 +28,7 @@ cap = cv2.VideoCapture(0)
 # create the VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
 
-fname = "output"+".avi"
+fname = utils.currDate() + "_" + utils.currTime()+".avi"
 out = cv2.VideoWriter(fname, fourcc, 20.0, (640, 480))
 
 currBuff = 0
