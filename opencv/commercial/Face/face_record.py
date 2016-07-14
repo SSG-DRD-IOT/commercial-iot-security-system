@@ -1,35 +1,18 @@
 import cv2
 import utils
 
-BUFF_LEN = 30 # 30 seems to be optimal number of frames for buffer
+buffMask = utils.genBuffMask(utils.BUFF_LEN)
 
-buffMask = utils.genBuffMask(BUFF_LEN)
+faceCascade = cv2.CascadeClassifier(utils.cascPath)
 
-if len(utils.argv) > 1:
-    cascPath = utils.argv[1]
-else:
-    cascPath = 'haar_face.xml'
 
-faceCascade = cv2.CascadeClassifier(cascPath)
-
-# input which camera to use
-if len(utils.argv)==3:
-    if utils.argv[2] == 0:
-        camera = 0
-    elif utils.argv[2] == 1:
-        camera = 1
-    else:
-        camera = 0
-else:
-    camera = 0
-
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(utils.dest)
 
 # create the VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
 
 fname = utils.currDate() + "_" + utils.currTime()+".avi"
-out = cv2.VideoWriter(fname, fourcc, 20.0, (640, 480))
+out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
 
 currBuff = 0
 

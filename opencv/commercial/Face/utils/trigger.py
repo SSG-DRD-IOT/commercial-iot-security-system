@@ -16,7 +16,7 @@ def trigger(info):
     infoJSON = json.dumps(info)
     try:
         # print "sending off via MQTT" # works very fluidly
-        mqtt.single("sensors/temperature/data", infoJSON, hostname="localhost")
+        mqtt.single("sensors/temperature/data", infoJSON, hostname="localhost") # blocks up application
     except:
         print "no MQTT connection found"
         pass
