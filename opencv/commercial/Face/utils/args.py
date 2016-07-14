@@ -10,6 +10,7 @@ parser.add_argument("-c", "--camera", help="location of USB camera", default=0, 
 parser.add_argument("-ht", "--height", help="video recording height", default=480, type=int)
 parser.add_argument("-w", "--width", help="video recording width", default=640, type=int)
 parser.add_argument("-k", "--cascade", help="Haar cascade classifier filename", type=str, default="haar_face.xml")
+parser.add_argument("-s", "--scale", help="adjust the scale factor", default=1.25, type=float)
 
 args = parser.parse_args()
 
@@ -22,6 +23,7 @@ else:
     dest = args.camera
 
 cascPath = args.cascade
+scaleFactor = args.scale
 
 frameHeight = args.height
 frameWidth = args.width

@@ -29,7 +29,7 @@ while True:
     # begin face cascade
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor=1.25,
+        scaleFactor=args.scale,
         minNeighbors=5,
         minSize=(30, 30)
     )
