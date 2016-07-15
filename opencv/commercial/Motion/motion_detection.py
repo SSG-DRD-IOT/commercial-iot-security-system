@@ -46,9 +46,14 @@ while(True):
     norm32 = np.sqrt(diff32[:,:,0]**2 + diff32[:,:,1]**2 + diff32[:,:,2]**2)/np.sqrt(255**2 + 255**2 + 255**2)
 
     diff = np.uint8(norm32*255)
-    _, thresh = cv2.threshold(diff, 100, 255, 0)
-    kernel = np.ones((20,20), np.uint8)
-    blobby = cv2.dilate(thresh, kernel, iterations= 4)
+    _, thresh = cv2.threshold(diff, 20, 255, 0)
+    kernel = np.ones((5,5), np.uint8)
+    thresh = cv2.erode(thresh, kernel, iterations=1)
+    blobby = cv2.dilate(thresh, kernel, iterations= 7)#3)
+
+    # test
+    ###########################################################################
+    tst = np.copy(blobby)
 
     fra, contours, hierarchy = cv2.findContours(blobby, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
@@ -79,6 +84,8 @@ while(True):
         cv2.imshow('frame', frameMod)
     else:
         cv2.imshow('frame', frame)
+    cv2.imshow('thresh', thresh)
+    cv2.imshow('blobby', tst)
     if cv2.waitKey(1) & 0xFF == 27:
         break
 cap.release()
