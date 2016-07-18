@@ -8,7 +8,7 @@
 # Description:
 #   trigger function
 #       when event is triggered, send data in JSON format by MQTT
-# Last Modified: 7.14.2016
+# Last Modified: 7.18.2016
 ###############################################################################
 import paho.mqtt.publish as mqtt
 import json
@@ -32,5 +32,6 @@ def trigger(info):
     except:
         print "no MQTT connection found"
         pass
-    print "Event triggered:", info["facenum"], "detected at frame:", info["offsetframe"],"!"
+    print "Event triggered:", info["event"]
+    print info
     return 1

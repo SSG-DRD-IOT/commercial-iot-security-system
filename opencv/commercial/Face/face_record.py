@@ -24,13 +24,14 @@ faceCascade = cv2.CascadeClassifier(utils.cascPath)
 # use to select video source
 cap = cv2.VideoCapture(utils.dest)
 
-# create the VideoWriter object
-fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
 
-# create output video file name
-fname = utils.currDate() + "_" + utils.currTime() + ".avi"
-# configure output video settings
-out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
+if utils.record:
+    # create the VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
+    # create output video file name
+    fname = utils.currDate() + "_" + utils.currTime() + ".avi"
+    # configure output video settings
+    out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
 
 # create a fresh buffer
 currBuff = 0
@@ -48,7 +49,7 @@ while True:
     # begin face cascade
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor=args.scale,
+        scaleFactor=utils.scaleFactor,
         minNeighbors=5,
         minSize=(30, 30)
     )
@@ -65,21 +66,23 @@ while True:
         # dictionary stores data to be transmitted
         triggerInfo = {
             "event": "FaceDetect",
-            "uri": "http://gateway" + "/" + fname,
             "facenum": len(faces),
-            "timestamp": utils.currDate() + "--" + utils.currTime(),
-            "offsetframe": frameCount
+            "timestamp": utils.currDate() + "--" + utils.currTime()
         }
+        if utils.record:
+            triggerInfo['offsetframe'] = frameCount
+            triggerInfo['uri'] = "http://gateway" + "/" + fname
+            # start counting frames since seeing face
+            if(utils.record):
+                lastStart = frameCount
         # activate a trigger, which transmits via MQTT
         utils.trigger(triggerInfo)
 
-        # start counting frames since seeing face
-        lastStart = frameCount
-
     # write to video file if buffer active
+
     if(currBuff > 0):
         # only writes if amount of time since face detection less than set recorging length
-        if (frameCount - lastStart) < utils.recordLength:
+        if ( (frameCount - lastStart) < utils.recordLength ) and utils.record:
             out.write(frame)
         frameCount += 1
 
@@ -91,6 +94,7 @@ while True:
         break
 
 # When everything is done, release the capture
-out.release()
+if utils.record:
+    out.release()
 cap.release()
 cv2.destroyAllWindows()

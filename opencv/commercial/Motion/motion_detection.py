@@ -50,7 +50,7 @@ while(True):
     kernel = np.ones((5,5), np.uint8)
     thresh = cv2.erode(thresh, kernel, iterations=1)
     blobby = cv2.dilate(thresh, kernel, iterations= 7)#3)
-
+    blobby = cv2.erode(blobby, kernel, iterations=2)
     # test
     ###########################################################################
     tst = np.copy(blobby)
@@ -63,7 +63,8 @@ while(True):
             largest_contour = i
 
     frameMod = np.copy(frame)
-    cv2.drawContours(frameMod, contours, largest_contour, [0, 0, 255],  3)
+    # cv2.drawContours(frameMod, contours, largest_contour, [0, 0, 255],  3)
+    cv2.drawContours(frameMod, contours, -1, [0, 0, 255],  3)
 
     # buffer
     currBuff = ( (currBuff << 1) | (np.any(blobby)) ) & buffMask
