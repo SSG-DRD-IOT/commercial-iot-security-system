@@ -29,6 +29,8 @@ hog.setSVMDetector( cv2.HOGDescriptor_getDefaultPeopleDetector() )
 
 print utils.dest, type(utils.dest)
 cap = cv2.VideoCapture(utils.dest)
+# TODO: differentiate between camera and online input
+    # also find difference between reading from video and IP Camera
 cap.set(cv2.CAP_PROP_FRAME_WIDTH,utils.frameHeight)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,utils.frameWidth)
 
