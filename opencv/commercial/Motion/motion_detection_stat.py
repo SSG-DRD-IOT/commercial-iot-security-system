@@ -14,9 +14,6 @@ import cv2
 import utils
 
 
-def trigger():
-    print "Motion detected!"
-
 if utils.visual:
     cv2.namedWindow('frame')
     cv2.namedWindow('dist')
@@ -63,8 +60,6 @@ while(True):
     if DEBUG:
         frame3 = utils.applyNoise(frame3, utils.noise)
     dist = utils.distMap(frame1, frame3)
-    # if DEBUG:
-    #     dist = utils.applyNoise(dist, .005)
 
     frame1 = frame2
     frame2 = frame3
