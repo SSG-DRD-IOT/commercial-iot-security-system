@@ -25,8 +25,8 @@ def frameAvg(prevLen, prevAvg, frame):
 # cv2.namedWindow('frame')
 # cv2.namedWindow('dist')
 AVG_LEN = 70 # 70 - background appears; 2 - motion detection; 200; 500
-# cap = cv2.VideoCapture("cars.avi")
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture("cars.avi")
+# cap = cv2.VideoCapture(1) #spooky
 
 ret, Avg = cap.read()
 oldCount = 1
