@@ -1,4 +1,4 @@
 /Motion/Difference_Frames/cars.avi
 /Person/pedestrians.mp4
-/Motion/*.avi
 /Motion/motion_detection_simple.py
+/*/*.avi
