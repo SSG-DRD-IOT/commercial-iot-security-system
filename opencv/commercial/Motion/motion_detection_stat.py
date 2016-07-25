@@ -51,9 +51,20 @@ else:
     cv2.setMouseCallback('frame', stAvgSelect)
     print "Click to begin capturing average standard deviation"
 
+if utils.record:
+    # create the VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
+    # create output video file name
+    fname = utils.currDate() + "_" + utils.currTime() + ".avi"
+    # configure output video settings
+    out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
+
+
 _, frame1 = cap.read()
 _, frame2 = cap.read()
 
+frameCount = 1
+lastStart = -1
 while(True):
     _, frame3 = cap.read()
     rows, cols, _ = np.shape(frame3)
@@ -83,19 +94,23 @@ while(True):
     else:
         if stDev > sdAvg + utils.sdThresh:
             if not triggered:
-                fname = "foo.bar"
+
+                lastStart = frameCount
+
                 triggerInfo = {
                     "event": "MotionDetect",
                     "uri": "http://gateway" + "/" + fname,
-                    "timestamp": utils.currDate() + "--" + utils.currTime()
-                    # "offsetframe": frameCount
+                    "timestamp": utils.currDate() + "--" + utils.currTime(),
+                    "offsetframe": lastStart
                     }
 
                 utils.trigger(triggerInfo)
                 triggered = True
         else:
             triggered = False
-
+    if utils.record and (frameCount - lastStart) < utils.recordLength:
+        out.write(frame2)
+        frameCount += 1
     if utils.visual:
         cv2.imshow('dist', mod)
         cv2.imshow('edge', edge)
@@ -113,5 +128,7 @@ while(True):
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
+if utils.record:
+    out.release
 cap.release()
 cv2.destroyAllWindows()

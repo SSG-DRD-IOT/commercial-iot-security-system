@@ -27,9 +27,13 @@ parser.add_argument("-v", "--visual", help="turn on visual mode", action="count"
 parser.add_argument("-n", "--noise", help="set noise multiplier", default=.005, type=float)
 parser.add_argument("-d", "--debug", help="turn on debug mode", action="count")
 parser.add_argument("-s", "--stdev", help="set average st dev", default=0, type=float)
+parser.add_argument("-r", "--record", help="enable recording", action="count")
 
 args = parser.parse_args()
+
 visual = args.visual
+record = args.record
+
 sdAvg = args.stdev
 sdThresh = args.threshold
 noise = args.noise # scaling of noise; 0-1
