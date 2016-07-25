@@ -28,7 +28,7 @@ def trigger(info):
     # convert dict into JSON object
     infoJSON = json.dumps(info)
     try:
-        mqtt.single("sensors/temperature/data", infoJSON, hostname="localhost") # blocks up application
+        mqtt.single("sensors/video/motion", infoJSON, hostname="localhost") # blocks up application
     except:
         print "no MQTT connection found"
         pass

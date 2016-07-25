@@ -34,7 +34,7 @@ args = parser.parse_args()
 # set variable values from options
 BUFF_LEN = args.buffer
 recordLength = args.length
-
+display = args.visual
 # check if given URL or USB camera
 if args.url:
     dest = args.url

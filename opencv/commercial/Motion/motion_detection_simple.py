@@ -3,7 +3,7 @@
 # Contact: danbudanov@gmail.com
 # Summer Internship - 2016
 ###############################################################################
-# Title: motion_detection.py
+# Title: motion_detection_simple.py
 # Project: Security System
 # Description:
 #   detect motion in a static room
