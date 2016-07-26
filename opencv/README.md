@@ -14,6 +14,10 @@ and place the file **cv2.pyd** into your
 **C:\Users\username\AppData\Local\Continuum\Anaconda2\Lib\site-packages** folder.
 
 ## Structure
+### Commercial
+*commercial workshop elements*
+**commercial** contains the polished up project versions created for commercial workshops
+
 ### Demo
 *presentation elements*
 **demo** contains the demos I used in the presentation. The original python files
