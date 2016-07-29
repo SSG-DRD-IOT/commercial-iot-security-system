@@ -129,6 +129,6 @@ while(True):
         break
 
 if utils.record:
-    out.release
+    out.release()
 cap.release()
 cv2.destroyAllWindows()

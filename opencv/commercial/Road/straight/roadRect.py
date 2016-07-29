@@ -69,13 +69,13 @@ a3f = (528, 541)
 # cv2.arrowedLine(frame, tuple(v3i), tuple(v3f), (0, 255, 0), 2)
 
 # vecs = np.array([v1i, v1f, v2i, v2f, v3i, v3f])
-vecs = np.array([[v1i, v1f, v2i, v2f, v3i, v3f]], dtype=np.float32)
+vecs = np.array([[v1i, v1f, v2i, v2f, v3i, v3f]], dtype = np.float32)
 # print vecs
 # print type(vecs)
 
 # u = cv2.perspectiveTransform(vecs, M)
 u = cv2.perspectiveTransform(vecs, M)
-u = u[0] # u contains an extra layer of depth
+u = u[0] # u contains an extra layer of depth that needs to be removed
 # u = cv2.perspectiveTransform(np.array([[551, 576]]), M)
 
 # print "u is {}".format(u)

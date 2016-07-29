@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-cap = cv2.VideoCapture("cars.avi")
+cap = cv2.VideoCapture("carsCrop.avi")
 
 ret, frame1 = cap.read()
 prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
