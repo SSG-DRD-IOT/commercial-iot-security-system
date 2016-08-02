@@ -23,7 +23,7 @@ def ptAvg(pt1, pt2):
 
 
 def regionSelect(event, x, y, flags, param):
-    global calcSDAvg, sdList, sdAvg
+    global calcSDAvg, sdList, sdAvg, point
     if event == cv2.EVENT_LBUTTONDOWN:
         print "{}: ( {}, {} )".format(param, x, y)
 
@@ -35,6 +35,10 @@ def ftps2mph(ftps):
 def trigger(info):
     print("triggered!")
     print info
+
+def doNothing(event, x, y, flags, param):
+    return None
+
 cv2.namedWindow("road")
 cv2.namedWindow("transformed")
 
@@ -263,7 +267,6 @@ while(1):
         k = cv2.waitKey(1) & 0xff
         if k == 27:
             break
-
         # previously new gray frame becomes old one
         prev = nxt
 
