@@ -8,7 +8,7 @@
 # Description:
 #   uses optical flow to find car displacement vectors
 #   then, uses a perspective transform to estimate car velocity
-# Last Modified: 8.1.2016
+# Last Modified: 8.2.2016
 ###############################################################################
 import cv2
 import numpy as np
@@ -28,10 +28,13 @@ def regionSelect(event, x, y, flags, param):
         print "{}: ( {}, {} )".format(param, x, y)
 
 
-# small macros
+# conversion macro
 def ftps2mph(ftps):
     return ftps * 3600 / 5280.
 
+def trigger(info):
+    print("triggered!")
+    print info
 cv2.namedWindow("road")
 cv2.namedWindow("transformed")
 
@@ -43,6 +46,9 @@ p00 = (210, 204)
 p01 = (423, 210)
 p10 = (82, 355)
 p11 = (544, 356)
+
+# create a controur from ROI
+contour = np.array([p00, p01, p11, p10], dtype = np.int32).reshape((-1, 1, 2))
 
 # size of transformation
 cols_t = 350
@@ -69,6 +75,7 @@ M = cv2.getPerspectiveTransform(pts1, pts2)
 # retrieve first frame
 ret, frame1 = cap.read()
 rows, cols, _ = np.shape(frame1)
+
 
 # optical flow operates in grayscale
 prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
@@ -136,6 +143,7 @@ while(1):
         # calculate optical flow
         # yields rows x cols x 2 array with x and y components of displacement vector
         flow = cv2.calcOpticalFlowFarneback(prev,nxt, None, *flowParams)
+
         # calculate magnitude of displacement vector
         mag, ang = cv2.cartToPolar(flow[...,0], flow[...,1])
 
@@ -150,18 +158,19 @@ while(1):
 
         for i, pos in enumerate(goodMags[0]):
             # to reduce quantity of vecs working with, use every SHOW_EVERY-eth vector
-            if i % SHOW_EVERY == 0:
+            if (i % SHOW_EVERY == 0):
                 # get position of vector
                 x, y = (goodMags[1][i], goodMags[0][i])
-                # get horizontal and vertical components of vector
-                u, v = flow[y][x]
+                if cv2.pointPolygonTest(contour,(x,y),False)==1:
+                    # get horizontal and vertical components of vector
+                    u, v = flow[y][x]
 
-                # draw the displacement vector
-                cv2.arrowedLine(viewFrame, (x, y), (x+int(round(u)), y+int(round(v))), (0, 0, 255), 1)
+                    # draw the displacement vector
+                    cv2.arrowedLine(viewFrame, (x, y), (x+int(round(u)), y+int(round(v))), (0, 0, 255), 1)
 
-                # add displacement vector initial and final points to list
-                disp_arr_i.append((x,y))
-                disp_arr_f.append((x+u, y+v))
+                    # add displacement vector initial and final points to list
+                    disp_arr_i.append((x,y))
+                    disp_arr_f.append((x+u, y+v))
         # make lists into numpy arrays that can be operated on
         disp_i = np.float32([disp_arr_i])
         disp_f = np.float32([disp_arr_f])
@@ -219,9 +228,18 @@ while(1):
         # if the real speed isn't 0, print it
         if realSpeed:
             print realSpeed_mph
+            triggerInfo = {
+                "event": "VehicleSpeed",
+                "speed": realSpeed_mph,
+                "timestamp": "3:30-5-6-17",
+                "speeding": True
+            }
+            # trigger(triggerInfo)
 
         # draw the ROI boundary in yellow
-        cv2.polylines(viewFrame, [pts], True, (0, 255, 255))
+        # cv2.polylines(viewFrame, [pts], True, (0, 255, 255))
+        cv2.drawContours(viewFrame, [contour], 0, (0, 255, 255), 1)
+
         # draw line on the dashes in the rectqngular space
         cv2.line(transformed, tuple(markers_rect[0]), tuple(markers_rect[1]), (255, 0, 0), 2)
 
@@ -232,6 +250,10 @@ while(1):
         cv2.imshow("road", viewFrame)
         # show rectanguler space
         cv2.imshow("transformed", transformed)
+
+        # # for debugging
+        # # show ROI mask
+        # cv2.imshow("ROI Mask", roi_mask)
 
         if normer:
             # show region with normalized magnitudes
