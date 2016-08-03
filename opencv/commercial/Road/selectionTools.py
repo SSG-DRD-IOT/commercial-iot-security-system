@@ -28,7 +28,6 @@ def regionSelect(event, x, y, flags, param):
                 if point > max_pt:
                     mode = not mode
                     point = 0
-        # print "{}: ( {}, {} )".format(param, x, y)
 
 # subroutine that runs to select the ROI
 def regionSelectionMode(frame):

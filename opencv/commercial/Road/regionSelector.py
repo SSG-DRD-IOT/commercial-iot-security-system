@@ -83,12 +83,6 @@ def regionSelectionMode():
         elif k == 27:
             print "canceled"
             break
-            # if (None in (p00, p01, p11, p10, m1, m2)):
-            #     print "Please select all necessary points"
-            #     continue
-            # else:
-            #     print "quitting"
-            #     break
 
         elif k == ord('e'):
             if point < max_pt:

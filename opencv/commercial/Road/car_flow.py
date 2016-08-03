@@ -113,16 +113,6 @@ SHOW_EVERY = 20
 # maximum speed over which Speeding is triggered
 max_speed = 65 # mph
 
-# if utils.record:
-#     # create the VideoWriter object
-#     fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
-#     # create output video file name
-#     # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
-#     fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
-#     vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
-#     # configure output video settings
-#     out = cv2.VideoWriter(*vidParams)
-
 # main loop
 while(1):
     ret, frame2 = cap.read()
