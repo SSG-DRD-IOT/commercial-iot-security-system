@@ -58,6 +58,8 @@ if utils.record:
     fname = utils.currDate() + "_" + utils.currTime() + ".avi"
     # configure output video settings
     out = cv2.VideoWriter(fname, fourcc, utils.frameRate, (utils.frameWidth, utils.frameHeight))
+else:
+    fname = ''
 
 
 _, frame1 = cap.read()

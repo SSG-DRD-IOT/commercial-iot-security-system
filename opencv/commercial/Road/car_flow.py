@@ -87,7 +87,7 @@ rows, cols, _ = np.shape(frame1)
 prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
 
 # set threshold for velocity
-thresh = 3 # 5
+thresh = 5 # 5
 
 # beginning step; included because it can be useful for starting real-time view
 begin = True
@@ -224,6 +224,7 @@ while(1):
         realSpeed_mph = ftps2mph(realSpeed)
         # if the real speed isn't 0, print it
         if realSpeed:
+
             if utils.debug:
                 print realSpeed_mph
             if realSpeed_mph > max_speed:
@@ -262,6 +263,11 @@ while(1):
 
         # draw black line down middle of rectangular space showing length of average vector
         # cv2.arrowedLine(transformed, midpt, (midpt[0], midpt[1]+int(avgMag)), (0, 0, 0), 2)
+
+
+        if realSpeed and realSpeed_mph < 10 and utils.debug:
+            cv2.imwrite("{}-{}.png".format(jj, realSpeed_mph), viewFrame)
+            cv2.imwrite("{}-{}-rect.png".format(jj, realSpeed_mph), transformed)
 
         # show road with marked ROI
         cv2.imshow("road", viewFrame)
