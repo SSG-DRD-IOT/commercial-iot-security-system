@@ -13,15 +13,19 @@
 import cv2
 import numpy as np
 import pickle
+import selectionTools
+import transformTools
+import utils
 
 # load in pickled point data
-# fname_l = 'points.pickle'
-fname_l = "test"
+fname_l = 'points.pickle'
+# fname_l = "test"
 with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
 
 # begin video capture
-cap = cv2.VideoCapture("carsCrop.avi")
+# cap = cv2.VideoCapture("carsCrop.avi")
+cap = cv2.VideoCapture("cars2.avi")
 
 def ptAvg(pt1, pt2):
     ptMx = (pt1[0] + pt2[0])/2
@@ -29,105 +33,6 @@ def ptAvg(pt1, pt2):
     ptM = (ptMx, ptMy)
     return ptM
 
-
-def setElement(arr, idx, val):
-    high_id = len(arr) - 1
-    if idx <= high_id:
-        arr[idx] = val
-    else:
-        arr.append(val)
-    return arr
-
-def doNothing(event, x, y, flags, param):
-    return None
-
-def regionSelect(event, x, y, flags, param):
-    global mode, point, max_pt, roi_pt, dash_end
-    max_pt = 1 if mode else 3
-    if event == cv2.EVENT_LBUTTONDOWN:
-        if mode:
-            if point <= max_pt:
-                dash_end = setElement(dash_end, point, (x, y))
-                point += 1
-            else:
-                print "Press ENTER to save new points or ESC to cancel"
-        else:
-            if point <= max_pt:
-                roi_pt = setElement(roi_pt, point, (x, y))
-                point += 1
-                if point > max_pt:
-                    mode = not mode
-                    point = 0
-        # print "{}: ( {}, {} )".format(param, x, y)
-def regionSelectionMode(frame):
-    global mode, point, max_pt, roi_pt, dash_end, selecting
-    roi_pt = []
-    dash_end = []
-    mode = 0 # roi -> 0; dash -> 1
-    point = 0
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.namedWindow("Selection")
-    cv2.setMouseCallback("Selection", regionSelect, None)
-    while(True):
-        showFrame = np.copy(frame)
-        max_pt = 1 if mode else 3
-        modeText = "Dash" if mode else "ROI"
-        statString = modeText + (":{}".format(point))
-
-        cv2.putText(showFrame, statString, (20,30), font, 1, (255, 255, 255), 1, cv2.LINE_AA)
-
-        for i, pt in enumerate(roi_pt):
-            cv2.putText(showFrame, str(i), pt, font, 1, (255, 0, 0), 1, cv2.LINE_AA)
-        for i, pt in enumerate(dash_end):
-            cv2.putText(showFrame, str(i), pt, font, 1, (0, 0, 255), 1, cv2.LINE_AA)
-        cv2.imshow("Selection", showFrame)
-
-        k = cv2.waitKey(1) & 0xff
-
-        # ENTER
-        if k == 13:
-            if len(roi_pt)==4 and len(dash_end) == 2:
-                # p00, p01, p11, p10 = roi_pt
-                # m1, m2 = dash_end
-                print "done selecting"
-                break
-            # elif len(roi_pt) != 4:
-            #     print "switching to position", len(roi_pt)
-            #     point = len(roi_pt)
-            # elif len(dash_end) != 2:
-            #     print "switching to position", len(dash_end)
-            #     point = len(dash_end)
-
-        # ESC
-        elif k == 27:
-            print "canceled"
-            roi_pt = []
-            dash_end = []
-            break
-
-        elif k == ord('e'):
-            if point < max_pt:
-                print "moving to next point"
-                point += 1
-            elif not mode:
-                print "moving to dash"
-                mode = 1
-                point = 0
-        elif k == ord('q'):
-            if point > 0:
-                print "moving to previous point"
-                point -= 1
-            elif mode:
-                print "moving to roi"
-                mode = 0
-                point = 4
-        # keypress is a number
-        elif k in range(ord(str(0)), ord(str(max_pt)) + 1):
-            point = k - 48
-            print "moving to point", point
-    cv2.destroyWindow("Selection")
-    cv2.setMouseCallback("road", doNothing, None)
-    return roi_pt, dash_end
 
 # conversion macro
 def ftps2mph(ftps):
@@ -137,31 +42,6 @@ def trigger(info):
     print("triggered!")
     print info
 
-def doNothing(event, x, y, flags, param):
-    return None
-
-def getPerspective(p00, p10, p11, p01, m1, m2):
-    # float array of corners in original ROI
-    pts1 = np.float32([p00, p10, p11, p01])
-    # float array of corners in perspective transform
-    pts2 = np.float32([q00, q10, q11, q01])
-    # generate perspective transform matrix from ROI
-    M = cv2.getPerspectiveTransform(pts1, pts2)
-    return M
-
-def transformedParams(p00, p10, p11, p01, m1, m2):
-    M = getPerspective(p00, p10, p11, p01, m1, m2)
-    contour = np.array([p00, p01, p11, p10], dtype = np.int32).reshape((-1, 1, 2))
-
-    # form dash endpoints into an array
-    markers = np.float32([[m1, m2]])
-    # perform perspective transform on dash marker points
-    markers_rect = cv2.perspectiveTransform(markers, M)
-    # remove extra layer put on markers by transform
-    markers_rect = markers_rect[0]
-    # find length of markers in rectangular space
-    marker_len = np.linalg.norm(markers_rect[0] - markers_rect[1])
-    return M, markers_rect, marker_len
 
 cv2.namedWindow("road")
 cv2.namedWindow("transformed")
@@ -194,7 +74,7 @@ q01 = (cols_t, 0)
 q10 = (0, rows_t)
 q11 = (cols_t, rows_t)
 
-M, markers_rect, marker_len = transformedParams(p00, p10, p11, p01, m1, m2)
+M, markers_rect, marker_len, contour = transformTools.transformedParams(p00, p10, p11, p01, m1, m2, q00, q10, q11, q01)
 
 # real-world length of markers
 real_marker_len = 5.0 # ft
@@ -371,11 +251,11 @@ while(1):
         if k == 27:
             break
         elif k == ord('r'):
-            roi_pts, dash_pts = regionSelectionMode(frame2)
+            roi_pts, dash_pts = selectionTools.regionSelectionMode(frame2)
             if len(roi_pts) == 4 and len(dash_pts) == 2:
                 p00, p01, p11, p10 = roi_pts
                 m1, m2 = dash_pts
-                M, markers_rect, marker_len = transformedParams(p00, p10, p11, p01, m1, m2)
+                M, markers_rect, marker_len, contour = transformTools.transformedParams(p00, p10, p11, p01, m1, m2, q00, q10, q11, q01)
         elif k == ord('s'):
             pointContainer = {
                 "p00" : p00,

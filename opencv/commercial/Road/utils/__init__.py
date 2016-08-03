@@ -7,10 +7,8 @@
 # Project: Security System
 # Description:
 #   package dependency components
-# Last Modified: 7.14.2016
+# Last Modified: 8.3.2016
 ###############################################################################
-
-from onlinevid import *
 from trigger import *
 from sys import argv
 from buff import *
