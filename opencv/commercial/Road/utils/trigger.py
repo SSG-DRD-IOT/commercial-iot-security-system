@@ -4,7 +4,7 @@
 # Summer Internship - 2016
 ###############################################################################
 # Title: trigger.py
-# Project: Security System
+# Project: Car Speed Detection
 # Description:
 #   trigger function
 #       when event is triggered, send data in JSON format by MQTT

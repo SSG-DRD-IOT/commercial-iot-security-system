@@ -5,4 +5,5 @@
 /Road/videoCropper.py
 /*/*_old.py
 /Road/pickle_jar
-/road/*.p
+/Road/*.p
+/Road/regionSelector.py

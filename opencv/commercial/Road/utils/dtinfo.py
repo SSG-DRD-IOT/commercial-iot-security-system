@@ -4,7 +4,7 @@
 # Summer Internship - 2016
 ###############################################################################
 # Title: dtinfo.py
-# Project: Security System
+# Project: Car Speed Detection
 # Description:
 #   macros for supplying strings with date and time information
 # Last Modified: 7.14.2016

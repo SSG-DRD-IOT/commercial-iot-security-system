@@ -4,7 +4,7 @@
 # Summer Internship - 2016
 ###############################################################################
 # Title: genBuffMask.py
-# Project: Security System
+# Project: Car Speed Detection
 # Description:
 #   generate a buffer mask consisting of continuous binary ones
 # Last Modified: 7.14.2016

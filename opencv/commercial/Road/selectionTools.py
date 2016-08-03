@@ -1,3 +1,14 @@
+###############################################################################
+# Author: Daniil Budanov
+# Contact: danbudanov@gmail.com
+# Summer Internship - 2016
+###############################################################################
+# Title: selectionTools.py
+# Project: Car Speed Detection
+# Description:
+#   tools for selecting ROI points and dash endpoints
+# Last Modified: 8.3.2016
+###############################################################################selection
 import cv2
 import numpy as np
 

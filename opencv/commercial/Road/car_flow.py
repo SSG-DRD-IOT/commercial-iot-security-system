@@ -24,8 +24,7 @@ with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
 
 # begin video capture
-# cap = cv2.VideoCapture("carsCrop.avi")
-cap = cv2.VideoCapture("cars2.avi")
+cap = cv2.VideoCapture(utils.dest)
 
 def ptAvg(pt1, pt2):
     ptMx = (pt1[0] + pt2[0])/2

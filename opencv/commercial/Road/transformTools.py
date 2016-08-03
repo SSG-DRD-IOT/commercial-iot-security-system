@@ -1,3 +1,14 @@
+###############################################################################
+# Author: Daniil Budanov
+# Contact: danbudanov@gmail.com
+# Summer Internship - 2016
+###############################################################################
+# Title: transformTools.py
+# Project: Car Speed Detection
+# Description:
+#   tools for finding and applying perspective transformation
+# Last Modified: 8.3.2016
+###############################################################################
 import numpy as np
 import cv2
 

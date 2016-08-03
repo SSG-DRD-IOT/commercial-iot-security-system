@@ -4,9 +4,9 @@
 # Summer Internship - 2016
 ###############################################################################
 # Title: args.py
-# Project: Security System
+# Project: Car Speed Detection
 # Description:
-#   implement command line options for configuring security camera and recordings
+#   implement command line options for configuring traffic camera and recordings
 # Last Modified: 8.3.2016
 ###############################################################################
 import argparse

@@ -4,7 +4,7 @@
 # Summer Internship - 2016
 ###############################################################################
 # Title: __init__.py
-# Project: Security System
+# Project: Car Speed Detection
 # Description:
 #   package dependency components
 # Last Modified: 8.3.2016
