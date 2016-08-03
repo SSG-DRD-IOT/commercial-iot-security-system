@@ -3,8 +3,6 @@ import numpy as np
 
 cv2.namedWindow("road")
 
-
-
 def setElement(arr, idx, val):
     high_id = len(arr) - 1
     if idx <= high_id:
@@ -26,8 +24,6 @@ def regionSelect(event, x, y, flags, param):
                 point += 1
             else:
                 print "Press ENTER to save new points or ESC to cancel"
-
-
         else:
             if point <= max_pt:
                 roi_pt = setElement(roi_pt, point, (x, y))
@@ -35,13 +31,7 @@ def regionSelect(event, x, y, flags, param):
                 if point > max_pt:
                     mode = not mode
                     point = 0
-            # else:
-            #     mode = not mode
-            #     point = 0
-
         # print "{}: ( {}, {} )".format(param, x, y)
-
-# cv2.setMouseCallback("road", doNothing, None)
 
 p00, p01, p11, p10, m1, m2 = [None] * 6
 
