@@ -19,7 +19,7 @@ import utils
 
 # load in pickled point data
 fname_l = utils.inputParams
-# fname_l = "test"
+
 with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
 
@@ -97,8 +97,8 @@ jj = 0
 
 # frame counter for video reference
 frameCount = 0
-lastStart = -1
-
+lastStart = 0
+first_video_frame = True
 # get video framerate
 fps = cap.get(cv2.CAP_PROP_FPS)
 # calculate time interval between frames; use for velocity calculation
@@ -113,15 +113,15 @@ SHOW_EVERY = 20
 # maximum speed over which Speeding is triggered
 max_speed = 65 # mph
 
-if utils.record:
-    # create the VideoWriter object
-    fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
-    # create output video file name
-    # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
-    fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
-    vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
-    # configure output video settings
-    out = cv2.VideoWriter(*vidParams)
+# if utils.record:
+#     # create the VideoWriter object
+#     fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
+#     # create output video file name
+#     # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
+#     fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
+#     vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
+#     # configure output video settings
+#     out = cv2.VideoWriter(*vidParams)
 
 # main loop
 while(1):
@@ -238,6 +238,18 @@ while(1):
             if utils.debug:
                 print realSpeed_mph
             if realSpeed_mph > max_speed:
+                print "speeding at:", realSpeed_mph, "mph"
+                lastStart = frameCount
+                if utils.record and first_video_frame:
+                    # create the VideoWriter object
+                    fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
+                    # create output video file name
+                    # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
+                    fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
+                    vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
+                    # configure output video settings
+                    out = cv2.VideoWriter(*vidParams)
+                    first_video_frame = False
                 if utils.triggers:
                     triggerInfo = {
                         "event": "VehicleSpeed",
@@ -248,10 +260,10 @@ while(1):
                     if utils.record:
                         triggerInfo['uri'] = "http://gateway" + "/" + fname_vo
                         triggerInfo['offsetframe'] = frameCount
-                        lastStart = frameCount
                     utils.trigger(triggerInfo)
-            if utils.record and (frameCount - lastStart) < utils.recordLength:
+            if utils.record and (frameCount - lastStart) < utils.recordLength and not first_video_frame:
                 out.write(frame2)
+                print "wrote video frame"
                 frameCount += 1
         # draw the ROI boundary in yellow
         cv2.drawContours(viewFrame, [contour], 0, (0, 255, 255), 1)
@@ -307,6 +319,6 @@ print "done"
 
 # release video capture and destroy windows
 cap.release()
-if utils.record:
+if utils.record and not first_video_frame:
     out.release()
 cv2.destroyAllWindows
