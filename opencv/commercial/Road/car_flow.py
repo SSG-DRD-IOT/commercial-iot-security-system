@@ -15,7 +15,9 @@ import numpy as np
 import pickle
 
 # load in pickled point data
-with open('points.pickle', 'rb') as handle:
+# fname_l = 'points.pickle'
+fname_l = "test"
+with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
 
 # begin video capture
@@ -208,8 +210,6 @@ prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
 # set threshold for velocity
 thresh = 3 # 5
 
-
-
 # beginning step; included because it can be useful for starting real-time view
 begin = True
 # simple counter for debug purposes
@@ -348,7 +348,6 @@ while(1):
             # trigger(triggerInfo)
 
         # draw the ROI boundary in yellow
-        # cv2.polylines(viewFrame, [pts], True, (0, 255, 255))
         cv2.drawContours(viewFrame, [contour], 0, (0, 255, 255), 1)
 
         # draw line on the dashes in the rectqngular space
@@ -362,9 +361,6 @@ while(1):
         # show rectanguler space
         cv2.imshow("transformed", transformed)
 
-        # # for debugging
-        # # show ROI mask
-        # cv2.imshow("ROI Mask", roi_mask)
 
         if normer:
             # show region with normalized magnitudes
@@ -390,7 +386,7 @@ while(1):
                 "m2" : m2
             }
             fname_s = raw_input("Save to file:\t")
-            with open('fname_s', 'wb') as handle:
+            with open(fname_s, 'wb') as handle:
                 pickle.dump(pointContainer, handle)
             print "Saved to file:\t{}".format(fname_s)
 
