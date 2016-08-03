@@ -18,7 +18,7 @@ import transformTools
 import utils
 
 # load in pickled point data
-fname_l = 'points.pickle'
+fname_l = utils.inputParams
 # fname_l = "test"
 with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
@@ -95,6 +95,10 @@ begin = True
 # simple counter for debug purposes
 jj = 0
 
+# frame counter for video reference
+frameCount = 0
+lastStart = -1
+
 # get video framerate
 fps = cap.get(cv2.CAP_PROP_FPS)
 # calculate time interval between frames; use for velocity calculation
@@ -105,6 +109,19 @@ midpt = ptAvg((0,0), (cols_t, rows_t))
 
 # work with every Nth displacement vector
 SHOW_EVERY = 20
+
+# maximum speed over which Speeding is triggered
+max_speed = 65 # mph
+
+if utils.record:
+    # create the VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG') # MJPG is encoding supported by Windows
+    # create output video file name
+    # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
+    fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
+    vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
+    # configure output video settings
+    out = cv2.VideoWriter(*vidParams)
 
 # main loop
 while(1):
@@ -218,15 +235,24 @@ while(1):
         realSpeed_mph = ftps2mph(realSpeed)
         # if the real speed isn't 0, print it
         if realSpeed:
-            print realSpeed_mph
-            triggerInfo = {
-                "event": "VehicleSpeed",
-                "speed": realSpeed_mph,
-                "timestamp": "3:30-5-6-17",
-                "speeding": True
-            }
-            # trigger(triggerInfo)
-
+            if utils.debug:
+                print realSpeed_mph
+            if realSpeed_mph > max_speed:
+                if utils.triggers:
+                    triggerInfo = {
+                        "event": "VehicleSpeed",
+                        "speed": realSpeed_mph,
+                        "timestamp": "3:30-5-6-17",
+                        "speeding": True
+                    }
+                    if utils.record:
+                        triggerInfo['uri'] = "http://gateway" + "/" + fname_vo
+                        triggerInfo['offsetframe'] = frameCount
+                        lastStart = frameCount
+                    utils.trigger(triggerInfo)
+            if utils.record and (frameCount - lastStart) < utils.recordLength:
+                out.write(frame2)
+                frameCount += 1
         # draw the ROI boundary in yellow
         cv2.drawContours(viewFrame, [contour], 0, (0, 255, 255), 1)
 
@@ -281,4 +307,6 @@ print "done"
 
 # release video capture and destroy windows
 cap.release()
+if utils.record:
+    out.release()
 cv2.destroyAllWindows
