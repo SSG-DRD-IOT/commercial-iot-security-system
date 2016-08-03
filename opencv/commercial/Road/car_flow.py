@@ -284,16 +284,22 @@ while(1):
             # show region with normalized magnitudes
             cv2.imshow("normalized magnitudes", mag_norm)
 
-        # if user presses ESC then exit
+        # keyboard interrupts
         k = cv2.waitKey(1) & 0xff
+
+        # if user presses ESC then exit
         if k == 27:
             break
+
         elif k == ord('r'):
+            # run region selection routing
             roi_pts, dash_pts = selectionTools.regionSelectionMode(frame2)
             if len(roi_pts) == 4 and len(dash_pts) == 2:
                 p00, p01, p11, p10 = roi_pts
                 m1, m2 = dash_pts
                 M, markers_rect, marker_len, contour = transformTools.transformedParams(p00, p10, p11, p01, m1, m2, q00, q10, q11, q01)
+
+        # save points in current region selection
         elif k == ord('s'):
             pointContainer = {
                 "p00" : p00,
@@ -319,6 +325,9 @@ print "done"
 
 # release video capture and destroy windows
 cap.release()
+
+# if video was being recorded, release the video capture
 if utils.record and not first_video_frame:
     out.release()
+
 cv2.destroyAllWindows
