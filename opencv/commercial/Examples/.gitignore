@@ -2,7 +2,6 @@
 /Person/pedestrians.mp4
 /Motion/motion_detection_simple.py
 /*/*.avi
-!/Road/utils/carsCrop.avi
 /Road/videoCropper.py
 /*/*_old.py
 /Road/pickle_jar
