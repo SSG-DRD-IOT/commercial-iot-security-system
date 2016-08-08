@@ -16,27 +16,21 @@ and place the file **cv2.pyd** into your
 ## Structure
 ### Commercial
 *commercial workshop elements*
+
 **commercial** contains the polished up project versions created for commercial workshops
+  **Examples** contains the polished, independent projects that attendees will create in the workshops
+  **Instructions** contains code used in the workshop labs
 
 ### Demo
 *presentation elements*
+
 **demo** contains the demos I used in the presentation. The original python files
 are stored in **demo/src**, and the batch files used in the powerpoint that contain
 can be double-clicked to run the python code are in the **demo** folder itself
 
-### Experiments
-*projects I took on to better learn OpenCV*
-- Comments may still need to be updated
-- *experiments_pretty* is be the updated, commented, prettified version of experiments
-- **experiments_raw** is where I post the code that I write before transferring it into pretty
-
 ### Tutorials
-*tutorials I used to learn OpenCV*
-These are excellent resources that I used to learn OpenCV, and contain commented code
-from an outside tutorial featured in the OpenCV documentation. The original tutorials
-are available [here](http://docs.opencv.org/3.1.0/d6/d00/tutorial_py_root.html#gsc.tab=0).
+An excellent set of Python OpenCV tutorials is available with the OpenCV documentation
+[here](http://docs.opencv.org/3.1.0/d6/d00/tutorial_py_root.html#gsc.tab=0).
 
-## Misc
-*contains files I used for providing examples for the slides and other miscellaneous things*
 
 ## **Happy OpenCV-ing!**
