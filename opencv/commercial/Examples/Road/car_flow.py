@@ -313,8 +313,11 @@ while(1):
         prev = nxt
 
     else:
-        # if no more frames are returned from video then end video capture
-        break
+        if utils.inf:
+            cap = cv2.VideoCapture(utils.dest)
+        else:
+            # if no more frames are returned from video and not on infinite loop end video capture
+            break
 
 print "done"
 

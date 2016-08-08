@@ -25,9 +25,13 @@ parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_tr
 parser.add_argument("-v", "--visual", help="turn on visual mode", action="store_true")
 parser.add_argument("-r", "--record", help="enable recording", action="store_true")
 parser.add_argument("-t", "--triggers", help="toggle MQTT triggers", action="store_true")
+parser.add_argument("--inf", help="Loop video infinitely", action="store_true")
 
 
 args = parser.parse_args()
+
+# loop over video infinitely
+inf = args.inf
 
 # ROI and dash input parameters
 inputParams = args.input
