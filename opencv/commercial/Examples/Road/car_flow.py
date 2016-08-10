@@ -37,10 +37,6 @@ def ptAvg(pt1, pt2):
 def ftps2mph(ftps):
     return ftps * 3600 / 5280.
 
-def trigger(info):
-    print("triggered!")
-    print info
-
 
 cv2.namedWindow("road")
 cv2.namedWindow("transformed")
@@ -62,6 +58,9 @@ contour = np.array([p00, p01, p11, p10], dtype = np.int32).reshape((-1, 1, 2))
 
 
 # Defaults
+
+# Intel blue
+color_IntelBlue = (246, 141, 0)
 
 # size of transformation
 cols_t = 350
@@ -86,8 +85,6 @@ rows, cols, _ = np.shape(frame1)
 # optical flow operates in grayscale
 prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
 
-# set threshold for velocity
-thresh = 5 # 5
 
 # beginning step; included because it can be useful for starting real-time view
 begin = True
@@ -151,7 +148,7 @@ while(1):
         cv2.line(viewFrame, m1, m2, (255, 0, 0), 2)
 
         # find locations where displacement magnitudes surpass threshold
-        goodMags = np.where(mag > thresh)
+        goodMags = np.where(mag > utils.x_thresh)
 
         for i, pos in enumerate(goodMags[0]):
             # to reduce quantity of vecs working with, use every SHOW_EVERY-eth vector
@@ -163,7 +160,7 @@ while(1):
                     u, v = flow[y][x]
 
                     # draw the displacement vector
-                    cv2.arrowedLine(viewFrame, (x, y), (x+int(round(u)), y+int(round(v))), (0, 0, 255), 1)
+                    cv2.arrowedLine(viewFrame, (x, y), (x+int(round(u)), y+int(round(v))), color_IntelBlue, 2)
 
                     # add displacement vector initial and final points to list
                     disp_arr_i.append((x,y))
@@ -187,7 +184,7 @@ while(1):
 
             # draw displacement vectors in rectangular space
             for i, _ in enumerate(disp_rect_i_int):
-                cv2.arrowedLine(transformed, tuple(disp_rect_i_int[i,...]), tuple(disp_rect_f_int[i,...]), (0, 0, 255), 1)
+                cv2.arrowedLine(transformed, tuple(disp_rect_i_int[i,...]), tuple(disp_rect_f_int[i,...]), color_IntelBlue, 2)
 
         if type(disp_rect_i) == np.ndarray:
             # otherwise, 0 is returned
@@ -261,18 +258,13 @@ while(1):
         # draw line on the dashes in the rectqngular space
         cv2.line(transformed, tuple(markers_rect[0]), tuple(markers_rect[1]), (255, 0, 0), 2)
 
-        # draw black line down middle of rectangular space showing length of average vector
-        # cv2.arrowedLine(transformed, midpt, (midpt[0], midpt[1]+int(avgMag)), (0, 0, 0), 2)
-
-
-        if realSpeed and realSpeed_mph < 10 and utils.debug:
-            cv2.imwrite("{}-{}.png".format(jj, realSpeed_mph), viewFrame)
-            cv2.imwrite("{}-{}-rect.png".format(jj, realSpeed_mph), transformed)
 
         # show road with marked ROI
         cv2.imshow("road", viewFrame)
         # show rectanguler space
         cv2.imshow("transformed", transformed)
+
+
 
 
         if normer:

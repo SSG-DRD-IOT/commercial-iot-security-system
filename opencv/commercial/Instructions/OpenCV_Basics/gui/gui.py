@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def drawCircle(event, x, y, flags, param):
+def drawCircle( event, x, y, flags, param ):
     global tempCircle, circlesList
     circ = {
         "coord": (x, y),
@@ -26,12 +26,11 @@ cv2.createTrackbar('Radius', 'New Window', 0, 255, setRadius)
 
 while(True):
     img = np.zeros( (480, 640, 3), np.uint8 )
-    r = cv2.getTrackbarPos('Radius', 'New Window')
+    # cv2.getTrackbarPos('Radius', 'New Window')
     if tempCircle:
         cv2.circle( img, tempCircle["coord"], tempCircle["radius"], (0, 255, 0), 5 )
     for circle in circlesList:
         cv2.circle( img, circle["coord"], circle["radius"], (0, 255, 0), -1 )
-        print circle
     cv2.imshow( "New Window", img )
 
     k = cv2.waitKey(1)
