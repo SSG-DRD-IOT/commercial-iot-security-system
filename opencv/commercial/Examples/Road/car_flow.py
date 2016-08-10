@@ -241,7 +241,7 @@ while(1):
                     triggerInfo = {
                         "event": "VehicleSpeed",
                         "speed": realSpeed_mph,
-                        "timestamp": "3:30-5-6-17",
+                        "timestamp": utils.currDate() + "--" + utils.currTime(),
                         "speeding": True
                     }
                     if utils.record:

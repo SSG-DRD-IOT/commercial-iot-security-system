@@ -8,3 +8,5 @@
 /Road/*.p
 /Road/regionSelector.py
 /*/*_test.py
+/*/*.pyc
+/*/*/*.pyc
