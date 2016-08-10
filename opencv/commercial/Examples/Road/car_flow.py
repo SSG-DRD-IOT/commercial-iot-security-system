@@ -104,7 +104,7 @@ dt = 1./fps # seconds
 midpt = ptAvg((0,0), (cols_t, rows_t))
 
 # work with every Nth displacement vector
-SHOW_EVERY = 20
+SHOW_EVERY = utils.vecDiv
 
 # maximum speed over which Speeding is triggered
 max_speed = 65 # mph
