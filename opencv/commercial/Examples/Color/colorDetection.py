@@ -46,13 +46,13 @@ cap = cv2.VideoCapture(0)
 cv2.namedWindow('Track Color Object')
 cv2.setMouseCallback('Track Color Object', colorSelect)
 
-cv2.createTrackbar('H', 'Track Color Object', 0, 50, doNothing)
-cv2.createTrackbar('S', 'Track Color Object', 50, 50, doNothing)
-cv2.createTrackbar('V', 'Track Color Object', 10, 50, doNothing)
+cv2.createTrackbar('dH', 'Track Color Object', 0, 50, doNothing)
+cv2.createTrackbar('dS', 'Track Color Object', 50, 50, doNothing)
+cv2.createTrackbar('dV', 'Track Color Object', 10, 50, doNothing)
 while(1):
-    dh = cv2.getTrackbarPos('H', 'Track Color Object')
-    ds = cv2.getTrackbarPos('S', 'Track Color Object')
-    dv = cv2.getTrackbarPos('V', 'Track Color Object')
+    dh = cv2.getTrackbarPos('dH', 'Track Color Object')
+    ds = cv2.getTrackbarPos('dS', 'Track Color Object')
+    dv = cv2.getTrackbarPos('dV', 'Track Color Object')
 
     # create the color range array from these values
     cRanArr = np.array([dh, ds, dv])

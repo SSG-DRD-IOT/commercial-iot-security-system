@@ -8,6 +8,8 @@ images can be filtered with various low-pass filters (LPF), high-pass filters (H
 LPF helps remove noises, blur images
 HPF filters help find edges in images
 
+>> Actually correlation!
+
 function:
 cv2.filter2D() - convolve kernel with an image
 """
