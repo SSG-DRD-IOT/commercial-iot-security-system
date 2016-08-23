@@ -21,6 +21,6 @@ cv2.imshow("image", img)
 cv2.imshow("eq", equ)
 plt.show()
 cv2.waitKey(0)
-cv2.imwrite("equalized.jpg", equ)
+# cv2.imwrite("equalized.jpg", equ)
 cv2.destroyAllWindows
 plt.close('all')

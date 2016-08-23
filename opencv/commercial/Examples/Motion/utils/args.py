@@ -23,14 +23,15 @@ parser.add_argument("-c", "--camera", help="location of USB camera", default=0, 
 parser.add_argument("-ht", "--height", help="video recording height", default=480, type=int)
 parser.add_argument("-w", "--width", help="video recording width", default=640, type=int)
 parser.add_argument("-t", "--threshold", help="set threshold value", default=2.0, type=float)
-parser.add_argument("-v", "--visual", help="turn on visual mode", action="count")
+parser.add_argument("-v", "--visual", help="turn on visual mode", action="store_true")
 parser.add_argument("-n", "--noise", help="set noise multiplier", default=.005, type=float)
-parser.add_argument("-d", "--debug", help="turn on debug mode", action="count")
+parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
 parser.add_argument("-s", "--stdev", help="set average st dev", default=0, type=float)
-parser.add_argument("-r", "--record", help="enable recording", action="count")
-
+parser.add_argument("-r", "--record", help="enable recording", action="store_true")
+parser.add_argument("-m", "--message", help="enable MQTT transmission", action="store_true")
 args = parser.parse_args()
 
+message = args.message
 visual = args.visual
 record = args.record
 

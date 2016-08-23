@@ -7,7 +7,7 @@
 # Project: Security System
 # Description:
 #   detect motion in a static room using standard deviations
-# Last Modified: 7.25.2016
+# Last Modified: 8.22.2016
 ###############################################################################
 import numpy as np
 import cv2
@@ -41,8 +41,6 @@ def stAvgSelect(event, x, y, flags, param):
             calcSDAvg = False
             sdAvg = np.mean(sdList)
             print "The mean standard deviation is {}".format(sdAvg)
-
-
 
 if utils.sdAvg:
     sdAvg = utils.sdAvg
@@ -82,14 +80,9 @@ while(True):
 
     # apply thresholding
     _, thresh = cv2.threshold(mod, 100, 255, 0)
-    edge = cv2.Canny(mod, 100, 255)
 
-    # edge = cv2.Canny(dist, 100, 255)
-
-
-    # mean and st dev test
-    mean, stDev = cv2.meanStdDev(mod)
-    # print stDev
+    # calculate st dev test
+    _, stDev = cv2.meanStdDev(mod)
 
     if calcSDAvg:
         sdList = np.append(sdList, stDev)
@@ -115,7 +108,6 @@ while(True):
         frameCount += 1
     if utils.visual:
         cv2.imshow('dist', mod)
-        cv2.imshow('edge', edge)
         cv2.imshow('frame', frame2)
 
     # easier to see for DEBUG

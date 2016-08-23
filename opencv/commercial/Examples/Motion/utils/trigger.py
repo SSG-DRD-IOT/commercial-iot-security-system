@@ -12,25 +12,18 @@
 ###############################################################################
 import paho.mqtt.publish as mqtt
 import json
-
-''' General format of JSON:
-    {
-        "event": "FaceDetect",
-        "uri"  : "http://gateway/filename.avi",
-        "facenum" : 4
-        "timestamp" : Date.now()
-        "offsetframe" : 100
-    }
-
-'''
+from args import message
 
 def trigger(info):
+    # global message
     # convert dict into JSON object
     infoJSON = json.dumps(info)
-    try:
-        mqtt.single("sensors/video/motion", infoJSON, hostname="localhost") # blocks up application
-    except:
-        print "no MQTT connection found"
-        pass
+    if message:
+        try:
+            mqtt.single("sensors/video/motion", infoJSON, hostname="localhost") # blocks up application
+            # print "hi"
+        except:
+            print "no MQTT connection found"
+            pass
     print "Event triggered:", info["event"],"!"
     return 1
