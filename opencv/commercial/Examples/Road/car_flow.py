@@ -23,15 +23,6 @@ fname_l = utils.inputParams
 with open(fname_l, 'rb') as handle:
     pointContainer = pickle.load(handle)
 
-# begin video capture
-cap = cv2.VideoCapture(utils.dest)
-
-def ptAvg(pt1, pt2):
-    ptMx = (pt1[0] + pt2[0])/2
-    ptMy = (pt1[1] + pt2[1])/2
-    ptM = (ptMx, ptMy)
-    return ptM
-
 
 # conversion macro
 def ftps2mph(ftps):
@@ -52,10 +43,8 @@ p11 = pointContainer["p11"]
 m1 = pointContainer["m1"]
 m2 = pointContainer["m2"]
 
-# create a controur from ROI
-contour = np.array([p00, p01, p11, p10], dtype = np.int32).reshape((-1, 1, 2))
-
-
+# begin video capture
+cap = cv2.VideoCapture(utils.dest)
 
 # Defaults
 
@@ -77,31 +66,20 @@ M, markers_rect, marker_len, contour = transformTools.transformedParams(p00, p10
 # real-world length of markers
 real_marker_len = 5.0 # ft
 
-# retrieve first frame
-ret, frame1 = cap.read()
-rows, cols, _ = np.shape(frame1)
-
-
-# optical flow operates in grayscale
-prev = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
 
 
 # beginning step; included because it can be useful for starting real-time view
 begin = True
-# simple counter for debug purposes
-jj = 0
+first_video_frame = True
 
 # frame counter for video reference
 frameCount = 0
 lastStart = 0
-first_video_frame = True
+
 # get video framerate
 fps = cap.get(cv2.CAP_PROP_FPS)
 # calculate time interval between frames; use for velocity calculation
 dt = 1./fps # seconds
-
-# midpoint of projection frame
-midpt = ptAvg((0,0), (cols_t, rows_t))
 
 # work with every Nth displacement vector
 SHOW_EVERY = utils.vecDiv
@@ -111,24 +89,21 @@ max_speed = 65 # mph
 
 # main loop
 while(1):
-    ret, frame2 = cap.read()
-    jj += 1
+    ret, frame = cap.read()
     if ret:
         if begin:
             # if this is the very first frame, calculate prev and continue
             # use this step for implementing inter-frame timing later on
-            prev = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+            prev = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             begin = False
             continue
-        # initial and final points of displacement vectors
-        disp_arr_i = []
-        disp_arr_f = []
+
 
         # warp ROI into rectangular space by applying perspective transform
-        transformed = cv2.warpPerspective(frame2, M, (cols_t, rows_t))
+        transformed = cv2.warpPerspective(frame, M, (cols_t, rows_t))
 
         # perform color conversion for optical flow
-        nxt = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+        nxt = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # set optical flow parameters:
         #             (pyr_scale, levels, winsize, iterations, poly_n, poly_sigma, flags))
@@ -142,7 +117,7 @@ while(1):
         mag, ang = cv2.cartToPolar(flow[...,0], flow[...,1])
 
         # create a copy of original frame on which you draw vectors
-        viewFrame = np.copy(frame2)
+        viewFrame = np.copy(frame)
 
         # draw blue line along selected dash on highway
         cv2.line(viewFrame, m1, m2, (255, 0, 0), 2)
@@ -150,7 +125,11 @@ while(1):
         # find locations where displacement magnitudes surpass threshold
         goodMags = np.where(mag > utils.x_thresh)
 
-        for i, pos in enumerate(goodMags[0]):
+        # initial and final points of displacement vectors
+        disp_arr_i = []
+        disp_arr_f = []
+
+        for i, _ in enumerate(goodMags[0]):
             # to reduce quantity of vecs working with, use every SHOW_EVERY-eth vector
             if (i % SHOW_EVERY == 0):
                 # get position of vector
@@ -169,8 +148,7 @@ while(1):
         disp_i = np.float32([disp_arr_i])
         disp_f = np.float32([disp_arr_f])
 
-        # set rectangular displacements to 0 by default
-        disp_rect_i, disp_rect_f = 0, 0
+
 
         # check if displacement vector array has any points in it
         if disp_i.any():
@@ -186,7 +164,7 @@ while(1):
             for i, _ in enumerate(disp_rect_i_int):
                 cv2.arrowedLine(transformed, tuple(disp_rect_i_int[i,...]), tuple(disp_rect_f_int[i,...]), color_IntelBlue, 2)
 
-        if type(disp_rect_i) == np.ndarray:
+        # if type(disp_rect_i) == np.ndarray:
             # otherwise, 0 is returned
             # find x, y components of rectangular displacement vectors
             disp_rect_i_x = disp_rect_i[:, :, 0]
@@ -233,11 +211,11 @@ while(1):
                     # create output video file name
                     # fname_vo = utils.currDate() + "_" + utils.currTime() + "_speeding.avi"
                     fname_vo = "{}_{}_speeding.avi".format(utils.currDate(), utils.currTime())
-                    vidParams = (fname_vo, fourcc, utils.frameRate, (frame1.shape[1], frame1.shape[0]))
+                    vidParams = (fname_vo, fourcc, utils.frameRate, (frame.shape[1], frame.shape[0]))
                     # configure output video settings
                     out = cv2.VideoWriter(*vidParams)
                     first_video_frame = False
-                if utils.triggers:
+                if utils.message:
                     triggerInfo = {
                         "event": "VehicleSpeed",
                         "speed": realSpeed_mph,
@@ -248,10 +226,10 @@ while(1):
                         triggerInfo['uri'] = "http://gateway" + "/" + fname_vo
                         triggerInfo['offsetframe'] = frameCount
                     utils.trigger(triggerInfo)
-            if utils.record and (frameCount - lastStart) < utils.recordLength and not first_video_frame:
-                out.write(frame2)
-                print "wrote video frame"
-                frameCount += 1
+                if utils.record and (frameCount - lastStart) < utils.recordLength and not first_video_frame:
+                    out.write(frame)
+                    print "wrote video frame"
+                    frameCount += 1
         # draw the ROI boundary in yellow
         cv2.drawContours(viewFrame, [contour], 0, (0, 255, 255), 1)
 
@@ -267,7 +245,7 @@ while(1):
 
 
 
-        if normer:
+        if normer and utils.visual:
             # show region with normalized magnitudes
             cv2.imshow("normalized magnitudes", mag_norm)
 
@@ -280,7 +258,7 @@ while(1):
 
         elif k == ord('r'):
             # run region selection routing
-            roi_pts, dash_pts = selectionTools.regionSelectionMode(frame2)
+            roi_pts, dash_pts = selectionTools.regionSelectionMode(frame)
             if len(roi_pts) == 4 and len(dash_pts) == 2:
                 p00, p01, p11, p10 = roi_pts
                 m1, m2 = dash_pts

@@ -17,7 +17,6 @@ parser = argparse.ArgumentParser()
 # command line options
 parser.add_argument("-l", "--length", help="number of frames to record upon detection", type=int, default=1000)
 parser.add_argument("-f", "--fps", help="framerate of video recording", default=20, type=int)
-parser.add_argument("-b", "--buffer", help="calibrate buffer length", default=30, type=int)
 parser.add_argument("-u", "--url", help="IP camera location url", type=str)
 parser.add_argument("-c", "--camera", help="location of USB camera", default=0, type=int)
 parser.add_argument("-ht", "--height", help="video recording height", default=480, type=int)
@@ -39,8 +38,6 @@ sdAvg = args.stdev
 sdThresh = args.threshold
 noise = args.noise # scaling of noise; 0-1
 debug = args.debug
-# set variable values from options
-BUFF_LEN = args.buffer
 recordLength = args.length
 
 # check if given URL or USB camera

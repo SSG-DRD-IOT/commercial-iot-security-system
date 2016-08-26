@@ -20,8 +20,7 @@ def trigger(info):
     infoJSON = json.dumps(info)
     if message:
         try:
-            mqtt.single("sensors/video/motion", infoJSON, hostname="localhost") # blocks up application
-            # print "hi"
+            mqtt.single("sensors/video/motion", infoJSON, hostname="localhost")
         except:
             print "no MQTT connection found"
             pass

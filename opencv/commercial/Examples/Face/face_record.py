@@ -38,10 +38,10 @@ currBuff = 0
 
 # the number of the frame in the video
 frameCount = 0
-
+lastStart = -1
 while True:
     # Capture frame-by-frame
-    ret, frame = cap.read()
+    _, frame = cap.read()
 
     # the cascade is implemented in grayscale mode
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -50,20 +50,19 @@ while True:
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=utils.scaleFactor,
-        minNeighbors=5,
-        minSize=(30, 30)
+        minSize=(20, 20)
     )
-
-
-    # updates current buffer
-    currBuff = ( (currBuff << 1) | (len(faces)>0) ) & buffMask
     # draw a rectangle over detected faces
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 1)
 
+    # updates current buffer
+    currBuff = ( (currBuff << 1) | (len(faces)>0) ) & buffMask
+
+
     # if a face was detected after extemded period of time, transmit information
     if(currBuff == 1):
-        # dictionary stores data to be transmitted
+        # dictionary contains data to be transmitted
         triggerInfo = {
             "event": "FaceDetect",
             "facenum": len(faces),
@@ -73,13 +72,11 @@ while True:
             triggerInfo['offsetframe'] = frameCount
             triggerInfo['uri'] = "http://gateway" + "/" + fname
             # start counting frames since seeing face
-            if(utils.record):
-                lastStart = frameCount
+            lastStart = frameCount
         # activate a trigger, which transmits via MQTT
         utils.trigger(triggerInfo)
 
     # write to video file if buffer active
-
     if(currBuff > 0):
         # only writes if amount of time since face detection less than set recorging length
         if ( (frameCount - lastStart) < utils.recordLength ) and utils.record:
@@ -88,9 +85,10 @@ while True:
 
 
     # Display the resulting frame
-    cv2.imshow('Video', frame)
+    if utils.visual:
+        cv2.imshow('Video', frame)
     # press q to quit
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == 27:
         break
 
 # When everything is done, release the capture

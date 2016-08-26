@@ -26,19 +26,20 @@ def regionSelect(event, x, y, flags, param):
     global mode, point, max_pt, roi_pt, dash_end
     max_pt = 1 if mode else 3
     if event == cv2.EVENT_LBUTTONDOWN:
-        if mode:
+        if not mode:
+            if point <= max_pt:
+                roi_pt = setElement(roi_pt, point, (x, y))
+                point += 1
+            else:
+                mode = not mode
+                point = 0
+        else:
             if point <= max_pt:
                 dash_end = setElement(dash_end, point, (x, y))
                 point += 1
             else:
                 print "Press ENTER to save new points or ESC to cancel"
-        else:
-            if point <= max_pt:
-                roi_pt = setElement(roi_pt, point, (x, y))
-                point += 1
-                if point > max_pt:
-                    mode = not mode
-                    point = 0
+
 
 # subroutine that runs to select the ROI
 def regionSelectionMode(frame):
@@ -92,8 +93,8 @@ def regionSelectionMode(frame):
                 print "moving to roi"
                 mode = 0
                 point = 4
-        elif k in range(ord(str(0)), ord(str(max_pt)) + 1): # keypress is a number
-            point = k - 48
-            print "moving to point", point
+        # elif k in range(ord(str(0)), ord(str(max_pt)) + 1): # keypress is a number
+        #     point = k - 48
+        #     print "moving to point", point
     cv2.destroyWindow("Selection")
     return roi_pt, dash_end

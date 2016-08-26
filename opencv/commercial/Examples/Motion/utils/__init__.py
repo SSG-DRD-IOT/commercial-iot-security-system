@@ -7,12 +7,10 @@
 # Project: Security System
 # Description:
 #   package dependency components
-# Last Modified: 8.22.2016
+# Last Modified: 8.23.2016
 ###############################################################################
 
-# from onlinevid import *
 from trigger import *
-from sys import argv
 from dtinfo import currDate, currTime
 from args import *
 from tools import *

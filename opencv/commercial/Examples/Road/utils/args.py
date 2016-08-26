@@ -19,16 +19,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-i", "--input", help="pickle file containing ROI and dash parameters", type=str, default='points.pickle')
 parser.add_argument("-l", "--length", help="number of frames to record upon speeding detect", type=int, default=30)
 parser.add_argument("-f", "--fps", help="framerate of video recording", default=20, type=int)
-parser.add_argument("-b", "--buffer", help="calibrate buffer length", default=30, type=int)
 parser.add_argument("-n", "--number", help="number to divide vec quantity by", default=20, type=int)
-parser.add_argument("-u", "--url", help="IP camera location url", type=str, default="carsCrop.avi")
+parser.add_argument("-u", "--url", help="IP camera location url", type=str, default="cars.avi")
 parser.add_argument("-c", "--camera", help="location of USB camera", type=int)
 parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
 parser.add_argument("-v", "--visual", help="turn on visual mode", action="store_true")
 parser.add_argument("-r", "--record", help="enable recording", action="store_true")
-parser.add_argument("-t", "--triggers", help="toggle MQTT triggers", action="store_true")
 parser.add_argument("-x", "--displacement", help="set minimum displacement", type=int, default=2)
 parser.add_argument("--inf", help="Loop video infinitely", action="store_true")
+parser.add_argument("-m", "--message", help="enable MQTT transmission", action="store_true")
 
 
 args = parser.parse_args()
@@ -37,6 +36,8 @@ args = parser.parse_args()
 sep = "\\" if platform.system()=='Windows' else '/'
 projDirList = path.realpath(__file__).split(sep)[0:-2]
 projDir = sep.join(projDirList)
+
+message = args.message
 
 # number to divide number of vectors by
 vecDiv = args.number
@@ -54,7 +55,6 @@ if inputParams.count(sep) == 0:
     inputParams = projDir + sep + inputParams
 
 # set variable values from options
-BUFF_LEN = args.buffer
 recordLength = args.length
 display = args.visual
 # check if given URL or USB camera
@@ -71,4 +71,3 @@ frameRate = args.fps
 debug = args.debug
 visual = args.visual
 record = args.record
-triggers = args.triggers

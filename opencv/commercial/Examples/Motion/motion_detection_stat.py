@@ -19,14 +19,14 @@ if utils.visual:
     cv2.namedWindow('dist')
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(utils.dest)
 
 DISP_STDEV = True
 DEBUG = utils.debug # enters noise mode
 
 calcSDAvg = False
 
-sdList = np.array([])
+# sdList = np.array([])
 triggered = False
 
 
@@ -110,14 +110,13 @@ while(True):
         cv2.imshow('dist', mod)
         cv2.imshow('frame', frame2)
 
-    # easier to see for DEBUG
-    blank = np.ones(np.shape(frame3))
-    if utils.visual:
-        if DISP_STDEV:
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(blank, "{}".format(stDev[0][0]), (cols/8, rows/2), font, 5, (0, 0, 255), 3, cv2.LINE_AA)
-            cv2.imshow("stDev", blank)
 
+    if utils.visual and DISP_STDEV:
+        # easier to see for DEBUG
+        blank = np.ones(np.shape(frame3))
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(blank, "{}".format(stDev[0][0]), (cols/8, rows/2), font, 5, (0, 0, 255), 3, cv2.LINE_AA)
+        cv2.imshow("stDev", blank)
 
     if cv2.waitKey(1) & 0xFF == 27:
         break

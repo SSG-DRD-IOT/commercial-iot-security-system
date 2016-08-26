@@ -12,7 +12,7 @@
 ###############################################################################
 import paho.mqtt.publish as mqtt
 import json
-
+from args import message
 ''' General format of JSON:
     {
         "event": "PersonDetect",
@@ -26,11 +26,12 @@ import json
 def trigger(info):
     # convert dict into JSON object
     infoJSON = json.dumps(info)
-    try:
-        mqtt.single("sensors/temperature/data", infoJSON, hostname="localhost") # blocks up application
-    except:
-        print "no MQTT connection found"
-        pass
+    if message:
+        try:
+            mqtt.single("sensors/temperature/data", infoJSON, hostname="localhost") # blocks up application
+        except:
+            print "no MQTT connection found"
+            pass
     print "Event triggered:", info["event"]
     print info
     return 1

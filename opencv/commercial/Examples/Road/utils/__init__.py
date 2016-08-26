@@ -10,7 +10,5 @@
 # Last Modified: 8.3.2016
 ###############################################################################
 from trigger import *
-from sys import argv
-from buff import *
 from dtinfo import currDate, currTime
 from args import *
