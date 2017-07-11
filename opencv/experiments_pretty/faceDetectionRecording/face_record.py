@@ -13,19 +13,19 @@ BUFF_LEN = 20 # 30 seems to be optimal number of frames for buffer
 buffMask = genBuffMask(BUFF_LEN)
 
 print sys.argv, len(sys.argv)
-cascPath = sys.argv[1]
-faceCascade = cv2.CascadeClassifier(cascPath)
+#cascPath = sys.argv[1]
+faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 # input which camera to use
-if len(sys.argv)==3:
-    if sys.argv[2] == 0:
-        camera = 0
-    elif sys.argv[2] == 1:
-        camera = 1
-    else:
-        camera = 0
-else:
-    camera = 0
+#if len(sys.argv)==3:
+#    if sys.argv[2] == 0:
+#        camera = 0
+#    elif sys.argv[2] == 1:
+#        camera = 1
+#    else:
+#        camera = 0
+#else:
+#    camera = 0
 cap = cv2.VideoCapture(0)
 
 # create the VideoWriter object
@@ -58,14 +58,14 @@ while True:
 
     if(currBuff > 0):
         out.write(frame)
-    elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
-        break
+    #elif((pastBuff>0) & (currBuff == 0)): # after face detected, of face disappears for BUFF_LEN frames, stop recording
+    #    break
 
     # Display the resulting frame
     cv2.imshow('Video', frame)
     # cv2.imshow('Video', gray)
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+       break
 
 # When everything is done, release the capture
 out.release()
