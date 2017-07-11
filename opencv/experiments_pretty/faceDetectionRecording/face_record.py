@@ -1,5 +1,4 @@
 import cv2
-import sys
 
 # Create a Haar-like feature cascade classifier object
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
